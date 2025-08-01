@@ -3,7 +3,7 @@ const productModel = require('../model/ProductModel');
 const fs = require('fs');
 
 
-const allowedCategories = ["abaya", "jalabiya", "shoe", "bag", "cap", "scarve", "hijab", "underwear", "veil", "all"]; // Define allowed categories
+const allowedCategories = ["abaya", "jalabiya", "gown", "shoe", "bag", "cap", "scarve", "hijab", "underwear", "veil", "all"]; // Define allowed categories
 
 
 // add new product
