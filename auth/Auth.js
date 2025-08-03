@@ -1,6 +1,6 @@
-const adminModel = require("../model/adminModel");
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
+const AdminModel = require('../model/adminModel');
 
 
 // Register admin
@@ -15,12 +15,12 @@ const registerAdmin = async (req, res) => {
         return res.status(400).json({ error: "Passwords do not match" });
     }
 
-    const existingAdmin = await adminModel.findOne({ email });
+    const existingAdmin = await AdminModel.findOne({ email });
     if (existingAdmin) {
         return res.status(409).json({ error: "Admin already exists" });
     }
 
-    const newAdmin = new adminModel({ name, email, password });
+    const newAdmin = new AdminModel({ name, email, password });
     await newAdmin.save();
 
     res.status(201).json({ message: "Admin registered successfully", admin: newAdmin });
@@ -34,7 +34,7 @@ const loginAdmin = async (req, res) => {
         return res.status(400).json({ error: "Email or name and password are required" });
     }
 
-    const admin = await adminModel.findOne({
+    const admin = await AdminModel.findOne({
         $or: [{ email: identifier }, { name: identifier }],
     });
 

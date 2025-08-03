@@ -24,6 +24,6 @@ const productSchema = new Schema({
 
 }, { timestamps: true }) ;
 
-const productModel = model("Product", productSchema)
+const ProductModel = model("Product", productSchema)
 
-module.exports = productModel
+module.exports = ProductModel

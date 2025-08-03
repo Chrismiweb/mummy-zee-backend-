@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const adminModel = require("../model/adminModel");
+const AdminModel = require("../model/adminModel");
 
 const isAdminLoggedIn = async (req, res, next) => {
   const auth = req.headers.authorization || "";
@@ -18,7 +18,7 @@ const isAdminLoggedIn = async (req, res, next) => {
       return res.status(403).json({ error: "Access denied. Admin only." });
     }
 
-    const admin = await adminModel.findById(decoded.id);
+    const admin = await AdminModel.findById(decoded.id);
 
     if (!admin) {
       return res.status(401).json({ error: "Admin not found. Please log in again." });

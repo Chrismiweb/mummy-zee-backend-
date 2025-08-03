@@ -1,5 +1,5 @@
 const path = require('path');
-const productModel = require('../model/ProductModel');
+const ProductModel = require('../model/ProductModel');
 const fs = require('fs');
 
 
@@ -40,7 +40,7 @@ const addProduct = async (req, res) => {
   const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
 
   /* -------- save new product ---------- */
-  const newProduct = await productModel.create({
+  const newProduct = await ProductModel.create({
     productName,
     price,
     category,
@@ -57,7 +57,7 @@ const addProduct = async (req, res) => {
 // get all product
  const getAllProduct = async (req, res) => {
   try {
-    const products = await productModel.find().sort({ createdAt: -1 });;
+    const products = await ProductModel.find().sort({ createdAt: -1 });;
     if (!products || products.length === 0) {
       return res.status(404).json({ error: "No products found" });
     }
@@ -72,7 +72,7 @@ const getProductsByCategory = async (req, res) => {
   const category = req.params.category?.toLowerCase();
 
   try {
-    const products = await productModel.find({ category });
+    const products = await ProductModel.find({ category });
 
     if (!products || products.length === 0) {
       return res.status(404).json({ error: `No products found in category: ${category}` });
@@ -91,7 +91,7 @@ const deleteProduct = async (req, res) => {
 
   try {
     // Find the product
-    const product = await productModel.findById(productId);
+    const product = await ProductModel.findById(productId);
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
@@ -108,7 +108,7 @@ const deleteProduct = async (req, res) => {
     }
 
     // Delete the product
-    await productModel.findByIdAndDelete(productId);
+    await ProductModel.findByIdAndDelete(productId);
 
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
@@ -121,7 +121,7 @@ const deleteProduct = async (req, res) => {
 const deleteAllProducts = async (req, res) => {
   try {
     // Find all products
-    const allProducts = await productModel.find();
+    const allProducts = await ProductModel.find();
 
     // Delete all image files associated with products
     allProducts.forEach((product) => {
@@ -136,7 +136,7 @@ const deleteAllProducts = async (req, res) => {
     });
 
     // Delete all products from the database
-    await productModel.deleteMany({});
+    await ProductModel.deleteMany({});
 
     res.status(200).json({ message: "All products deleted successfully" });
   } catch (error) {
@@ -152,7 +152,7 @@ const updateProduct = async (req, res) => {
   const { productName, price, category, size } = req.body;
 
   try {
-    const product = await productModel.findById(productId);
+    const product = await ProductModel.findById(productId);
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
