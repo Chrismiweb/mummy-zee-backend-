@@ -20,7 +20,12 @@ const productSchema = new Schema({
     productImage: {
         type: String,
         required: true,
-    }
+    },
+//     availability: {
+//     type: String,
+//     enum: ["available", "sold out"],
+//     default: "available",
+//   }
 
 }, { timestamps: true }) ;
 

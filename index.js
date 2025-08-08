@@ -10,6 +10,8 @@ const cors = require('cors');
 const app = express();
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+
 const corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -18,7 +20,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(fileUpload());
+// app.use(fileUpload());
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/',
+}));
 
 // --- Root Route for Render Health Check ---
 app.get('/', (req, res) => {

@@ -1,6 +1,7 @@
-const path = require('path');
 const ProductModel = require('../model/ProductModel');
-const fs = require('fs');
+const cloudinary = require('../utils/cloudinary');
+const fs = require("fs");
+const path = require("path");
 
 
 const allowedCategories = ["abaya", "jalabiya", "gown", "shoe", "bag", "cap", "scarve", "hijab", "underwear", "veil", "all"]; // Define allowed categories
@@ -8,7 +9,7 @@ const allowedCategories = ["abaya", "jalabiya", "gown", "shoe", "bag", "cap", "s
 
 // add new product
 const addProduct = async (req, res) => {
-  const { productName ,price, size,  category} = req.body;
+  // const { productName ,price, size,  category} = req.body;
 
   // Validate required fields
   if (!productName || !category || !size || !price) {
@@ -29,28 +30,50 @@ const addProduct = async (req, res) => {
 
   /* -------- handle image upload exactly like before ---------- */
   const imageFile   = req.files.productImage;
-  const uploadsDir  = path.join(__dirname, "../uploads");
-  if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
 
-  const fileName   = `${Date.now()}-${imageFile.name}`;
-  const uploadPath = path.join(uploadsDir, fileName);
+  // const uploadsDir  = path.join(__dirname, "../uploads");
+  // if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
 
-  await imageFile.mv(uploadPath);
-  // Construct image URL (THIS IS KEY)
-  const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
+  // const fileName   = `${Date.now()}-${imageFile.name}`;
+  // const uploadPath = path.join(uploadsDir, fileName);
 
-  /* -------- save new product ---------- */
-  const newProduct = await ProductModel.create({
-    productName,
-    price,
-    category,
-    size,
-    productImage: imageUrl,           
-  });
+  // await imageFile.mv(uploadPath);
+  // // Construct image URL (THIS IS KEY)
+  // const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
 
-  return res
-    .status(201)
-    .json({ message: "Product uploaded successfully", newProduct });
+  // /* -------- save new product ---------- */
+  // const newProduct = await ProductModel.create({
+  //   productName,
+  //   price,
+  //   category,
+  //   size,
+  //   productImage: imageUrl,           
+  // });
+
+  // return res
+  //   .status(201)
+  //   .json({ message: "Product uploaded successfully", newProduct });
+    try {
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(imageFile.tempFilePath || imageFile.tempFilePath, {
+      folder: "products", // optional folder
+    });
+
+    const imageUrl = result.secure_url;
+
+    const newProduct = await ProductModel.create({
+      productName,
+      price,
+      category,
+      size,
+      productImage: imageUrl,
+    });
+
+    return res.status(201).json({ message: "Product uploaded successfully", newProduct });
+  } catch (error) {
+    console.error("Upload error:", error);
+    return res.status(500).json({ error: "Failed to upload product" });
+  }
 };
 
 
