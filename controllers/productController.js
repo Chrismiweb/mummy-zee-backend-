@@ -9,7 +9,7 @@ const allowedCategories = ["abaya", "jalabiya", "gown", "shoe", "bag", "cap", "s
 
 // add new product
 const addProduct = async (req, res) => {
-  // const { productName ,price, size,  category} = req.body;
+  const { productName ,price, size,  category} = req.body;
 
   // Validate required fields
   if (!productName || !category || !size || !price) {
