@@ -21,11 +21,11 @@ const productSchema = new Schema({
         type: String,
         required: true,
     },
-//     availability: {
-//     type: String,
-//     enum: ["available", "sold out"],
-//     default: "available",
-//   }
+    availability: {
+    type: String,
+    enum: ["available", "sold out"],
+    default: "available",
+  }
 
 }, { timestamps: true }) ;
 

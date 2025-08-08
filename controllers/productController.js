@@ -9,7 +9,9 @@ const allowedCategories = ["abaya", "jalabiya", "gown", "shoe", "bag", "cap", "s
 
 // add new product
 const addProduct = async (req, res) => {
-  const { productName ,price, size,  category} = req.body;
+  // const { productName ,price, size,  category} = req.body;
+  const { productName, price, size, category, availability = "available" } = req.body;
+
 
   // Validate required fields
   if (!productName || !category || !size || !price) {
@@ -67,6 +69,7 @@ const addProduct = async (req, res) => {
       category,
       size,
       productImage: imageUrl,
+      availability, 
     });
 
     return res.status(201).json({ message: "Product uploaded successfully", newProduct });
@@ -172,7 +175,9 @@ const deleteAllProducts = async (req, res) => {
 // update product
 const updateProduct = async (req, res) => {
   const productId = req.params.id;
-  const { productName, price, category, size } = req.body;
+  // const { productName, price, category, size } = req.body;
+  const { productName, price, category, size, availability } = req.body;
+  
 
   try {
     const product = await ProductModel.findById(productId);
@@ -205,6 +210,7 @@ const updateProduct = async (req, res) => {
     if (price) product.price = price;
     if (category) product.category = category;
     if (size) product.size = size;
+    if (availability !== undefined) product.availability = availability;
 
     await product.save();
 
